@@ -1,0 +1,51 @@
+:host {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* prevent from clicking */
+}
+:root {
+    /* https://realtimecolors.com/?colors=091b11-ecf9f2-9abbdf-f2e1d4-be3c83 */
+    --text: #091b11;
+    --background: #ecf9f2;
+    --primary: #9abbdf;
+    --secondary: #f2e1d4;
+    --accent: #be3c83;
+}
+
+/* button {
+    
+}  */
+
+.window {
+    position: absolute;
+    pointer-events: initial;
+}
+
+.main-window {
+    background-color: rgba(192, 199, 200, 1.0);
+    
+    border: 3px solid;
+    border-color: #a89f90;
+    border-radius: 5px;
+}
+.A2S-main-window-title {
+    display: flex;
+    justify-content: center;
+}
+.A2S-main-window-title > :nth-child(1) {
+    color: #c41958;
+}
+.A2S-main-window-title > :nth-child(2) {
+    color: #37d644;
+}
+.A2S-main-window-title > :nth-child(3) {
+    color: #4237d6;
+}
+
+
+.Page {
+    display: flex;
+    flex-direction: column;
+}
+

@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "prod": "node ./esbuild.mjs --production",
+    "production": "node ./esbuild.mjs --production",
+    "watch": "node ./esbuild.mjs --watch",
+    "dev": "node ./esbuild.mjs"
+  },
+  "dependencies": {
+    "@tsconfig/recommended": "^1.0.2",
+    "buffer": "^6.0.3",
+    "csstype": "^3.1.2",
+    "esbuild": "^0.19.2",
+    "minimist": "^1.2.8",
+    "smart-buffer": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.1"
+  }
+}
