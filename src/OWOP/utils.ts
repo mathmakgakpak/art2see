@@ -4,12 +4,9 @@ import { updatePlayerPacket } from "./packets";
 
 
 const maxTeleportBeforeRebound = 500_000; // you can teleport here without any problem
-const maxTeleportDistance = 10_000; // that's the maximum **distance** you can travel in one packet
+const maxTeleportDistance = 10_000 - 2; // that's the maximum **distance** you can travel in one packet
+// -2 just to be safe
 
-/*
-var x = 507_071; // tje
-A2S.teleport(x, x)
-*/
 export function centerCameraAt(x: number, y: number) {
     if (availableApis.vanilla)
         availableApis.vanilla.emit(availableApis.eventsList.net.world.teleported, x, y);
@@ -71,7 +68,7 @@ export function isOutsideTeleportBarrier(x: number, y: number) {
 }
 
 
-let farTeleporting = false;
+
 
 // less event listeners more complicated
 // export class EventWaiter {
@@ -135,20 +132,19 @@ function getLastPixelBeforeBarrier(x1: number, y1: number, x2: number, y2: numbe
 
 
 
-/*
-I don't know much math yet so I can't optimize it yet
-*/
 
+let farTeleporting = false;
 
+// if i wanted to replace the wait I would probably need to overhear the websocket communication and get the player id from world update see: https://i.imgur.com/x9CjWfo.png
 /**
  * 
  * @param x 
  * @param y 
- * @param wait - amount of ms to wait after each teleport
+ * @param wait - amount of ms to wait after each teleport 
  * @returns false if it can't teleport because it is already teleporting or number of teleports  
  */
-export async function farTeleport(x: number, y: number, wait: number = 50) {
-    // if (farTeleporting) return false;
+export async function farTeleport(x: number, y: number, wait: number = 200, forceCamera: boolean = false ) {
+    if (farTeleporting) return false;
     
     // const eventWaiter = new EventWaiter(availableApis.vanilla, availableApis.eventsList.net)
 
@@ -160,16 +156,16 @@ export async function farTeleport(x: number, y: number, wait: number = 50) {
 
     let tpMethod;
     let updatePlayerCopy: any;
-    if (availableApis.net && false) {
+    if (availableApis.net && !forceCamera) {
         tpMethod = teleport;
         // @ts-ignore - preventing user from sending move packets
         updatePlayerCopy = availableApis.net.protocol.constructor.prototype.sendUpdates;
         // @ts-ignore
         availableApis.net.protocol.constructor.prototype.sendUpdates = () => { };
     } else {
-        tpMethod = cameraTeleport;
+        tpMethod = cameraTeleport; // sadly I don't know any way to prevent chunk requesting
     }
-
+    
     async function finish() {
         centerCameraAt(x, y);
         await sleep(wait);
@@ -208,42 +204,50 @@ export async function farTeleport(x: number, y: number, wait: number = 50) {
     if(shortest === pixelPassingTheBarrier?.distance) {
         spx = pixelPassingTheBarrier.x;
         spy = pixelPassingTheBarrier.y;
+        tpMethod(spx, spy)
+        await sleep(wait);
         // console.log("From player to barrier", pixelPassingTheBarrier.distance)
     } else if(shortest === fromSpawnToBarrier?.distance) {
         spx = fromSpawnToBarrier.x;
         spy = fromSpawnToBarrier.y;
+        tpMethod(spx, spy)
+        await sleep(wait);
         // console.log("From spawn to barrier", fromSpawnToBarrier.distance);
     }/*  else {
         console.log("From player to destination", distanceFromPlayerToDestination);
     } */
     
-
+    
     // console.log(spx, spy, shortest);
-    // return;
-    let [lastX, lastY] = [spx, spy]; // it is here for tests
+    let [lastX, lastY] = [spx, spy];
     let teleports = 0;
-    let stepCounter = Infinity; // make sure it teleports first time
-    for (const [tpX, tpY] of line(lastX, lastY, x, y)) {
-        if (stepCounter++ <= maxTeleportDistance - 10) continue;
-        stepCounter = 0;
+    let distanceLeft = shortest;
+    while (distanceLeft > 0) {
+        const distance = distanceLeft >= maxTeleportDistance ? maxTeleportDistance : distanceLeft;
+        distanceLeft -= distance;
 
-        tpMethod(tpX, tpY);
+        const angle = Math.atan2(y - lastY, x - lastX); // NOTE maybe put these outside the while loop later
+        const xJump = Math.cos(angle) * distance;
+        const yJump = Math.sin(angle) * distance;
+
+        lastX += xJump;
+        lastY += yJump;
+
+        tpMethod(lastX, lastY);
         teleports++;
-        console.log(lastX, lastY, tpX, tpY, Math.hypot(tpX - lastX, tpY - lastY));
-        lastX = tpX;
-        lastY = tpY;
+        // console.log(
+        //     `Angle: ${angle} ${angle * 180 / Math.PI}\n` +
+        //     `Jump: ${xJump} ${yJump}\n` +
+        //     `Distance:${Math.hypot(xJump, yJump)} ${distance}\n` +
+        //     `Distance left: ${distanceLeft}`
+        // );
         
         await sleep(wait);
     }
-    await sleep(wait);
-    tpMethod(x, y);
-    teleports++;
-    console.log(lastX, lastY, x, y, Math.hypot(x - lastX, y - lastY), "last");
 
-    // await finish()
+    // console.log(lastX, lastY, x, y, Math.hypot(x - lastX, y - lastY), "last");
 
-
-
+    await finish();
     
     return teleports;
 }
