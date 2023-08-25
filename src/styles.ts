@@ -3,7 +3,7 @@ import styles from "./A2NStyles.css";
 
 
 const A2SStyle = mkHTML("style", {
-    textContent: styles
+    innerHTML: styles
 })
 
 export default A2SStyle;

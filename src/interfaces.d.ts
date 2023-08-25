@@ -23,3 +23,36 @@ export interface ArtInfoInterface {
     likes?: number;
     dislikes?: number;
 }
+
+export interface OWOPInterface {
+    events: {
+        loaded: number; // most likely 1
+    }
+    camera: {
+        get zoom(): number;
+        get x(): number;
+        get y(): number;
+    }
+    mouse: {
+        x: number; // it is not a getter but idk if you can change it
+        y: number;
+        get tileX(): number; // what tile (integer)
+        get tileY(): number;
+        get worldX(): number; // float
+        get worldY(): number;
+    }
+    player: {
+        selectedColor: [number, number, number];
+        get toolId(): number | undefined;
+    }
+    // TODO fix typing here
+    emit(eventId: eventIds.net.world.teleported, x: number, y: number): void;
+    // windowSys: {
+    //     addWindow(t: any): any
+    //     centerWindow(t: any): any
+    // }
+    net?: {
+        connection?: WebSocket
+    }
+    require?(name: string): any;
+}

@@ -13,3 +13,11 @@ export function mkHTML<T extends keyof HTMLElementTagNameMap>(
     return elm;
 }
 
+export function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function calculateDistance(x1: number, y1: number, x2: number, y2: number) {
+    // it doesn't matter which one is bigger or smaller
+    return Math.hypot(x2 - x1, y2 - y1);
+}
