@@ -1,20 +1,23 @@
 import { mkHTML } from "./utils";
-import A2SStyle from "./styles";
-import { ArtInfoInterface } from "./interfaces";
 
 import Page from "./GUIPage";
 import HomePage from "./GUIPages/home";
 import CollectionPage from "./GUIPages/collection";
 import { Window } from "./WindowsManager";
-// TODO add this somewhere https://github.com/LapisHusky/betteropm
+import TeleportPage from "./GUIPages/teleport";
+
 class GUI extends Window {
-    pageButtonsElements: HTMLDivElement = mkHTML("div");
+    pageButtonsElements: HTMLDivElement = mkHTML("div", {
+        className: "page-buttons"
+    });
 
     homePage = new HomePage();
     
     collectionPage = new CollectionPage();
+
+    teleportPage = new TeleportPage();
     
-    pages: Readonly<Page[]> = [this.homePage, this.collectionPage];
+    pages: Readonly<Page[]> = [this.homePage, this.collectionPage, this.teleportPage];
 
     constructor() {
         const titleNodes = ["Art", "2", "See"].map(x => mkHTML("span", {
@@ -24,7 +27,7 @@ class GUI extends Window {
         super("Main", titleNodes);
         
         this.container.classList.add("main-window")
-        this.titleBar.classList.add("A2S-main-window-title")
+        // this.titleBar.classList.add("title")
 
         this.initPageButtons();
         this.initPages();

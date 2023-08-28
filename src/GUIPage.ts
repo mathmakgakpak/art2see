@@ -3,14 +3,11 @@ import { mkHTML } from "./utils";
 class Page {
     pageElement: HTMLDivElement;
     constructor(
-        public name: string,
-        className: string
+        public name: string
     ) {
         this.pageElement = mkHTML("div", {
             className: "Page",
         });
-
-        if(className.length) this.pageElement.classList.add(className);
     }
     get isVisible() {
         return this.pageElement.style.display !== "none";

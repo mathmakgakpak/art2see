@@ -9,10 +9,10 @@ const MINIFY = Boolean(args.minify);
 
 const ctx = await esbuild.context({
     entryPoints: ["./src/index.ts"],
+    outfile: "./build.js",
     bundle: true,
-
-    outfile: "./index.js",
     minify: PRODUCTION || MINIFY,
+
     loader: { '.css': 'text' }, // I would want to somehow mix the two types so it analyzes the css but outputs directly into file but idk how
     logLevel: "info",
     color: true,

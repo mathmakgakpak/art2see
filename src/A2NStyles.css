@@ -21,6 +21,10 @@
     position: absolute;
     pointer-events: initial;
 }
+.window > .title {
+    display: flex;
+    justify-content: center;
+}
 
 .main-window {
     background-color: rgba(192, 199, 200, 1.0);
@@ -29,23 +33,44 @@
     border-color: #a89f90;
     border-radius: 5px;
 }
-.A2S-main-window-title {
+.main-window > .title > :nth-child(1) {
+    color: #c41958;
+}
+.main-window > .title > :nth-child(2) {
+    color: #37d644;
+}
+.main-window > .title > :nth-child(3) {
+    color: #4237d6;
+}
+.main-window > .content > .page-buttons {
     display: flex;
     justify-content: center;
 }
-.A2S-main-window-title > :nth-child(1) {
-    color: #c41958;
-}
-.A2S-main-window-title > :nth-child(2) {
-    color: #37d644;
-}
-.A2S-main-window-title > :nth-child(3) {
-    color: #4237d6;
-}
-
 
 .Page {
     display: flex;
     flex-direction: column;
+    padding: 0.2rem;
 }
 
+.teleport-page > .delay-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+.teleport-page > .delay-wrapper > span {
+    flex: 1;
+    margin-right: 1rem;
+}
+.teleport-page > .delay-wrapper > input {
+    flex: 2;
+}
+
+
+.position {
+    display: flex;
+}
+
+.ArtInfoElement {
+    display: flex;
+    flex-direction: column;
+}

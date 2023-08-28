@@ -7,8 +7,12 @@ export class Window {
     container = mkHTML("div", {
         className: "window"
     });
-    titleBar = mkHTML("div");
-    content = mkHTML("div"); 
+    titleBar = mkHTML("div", {
+        className: "title"
+    });
+    content = mkHTML("div", {
+        className: "content"
+    });
 
     public x: number = 0;
     public y: number = 0;
@@ -33,8 +37,8 @@ export class Window {
             downEvent.stopPropagation();
             offsetX = downEvent.clientX - this.x;
             offsetY = downEvent.clientY - this.y;
-            
-            
+
+
             document.addEventListener("mousemove", onmousemove);
         });
 
@@ -42,7 +46,7 @@ export class Window {
             document.removeEventListener("mousemove", onmousemove);
         });
 
-        
+
 
         this.titleBar.append(...this.titleNodes);
         this.container.appendChild(this.titleBar)
@@ -59,17 +63,17 @@ export class Window {
 export default class WindowsManager {
     public windows: Window[] = [];
     public space: HTMLDivElement = mkHTML("div");
-    public shadowRoot: ShadowRoot = this.space.attachShadow({mode: "open"});
+    public shadowRoot: ShadowRoot = this.space.attachShadow({ mode: "open" });
 
     constructor(
         private style: HTMLStyleElement,
     ) {
         this.shadowRoot.appendChild(this.style);
     }
-    
+
     addWindow(window: Window) {
         this.shadowRoot.appendChild(window.container);
         this.windows.push(window);
-        
+
     }
 }

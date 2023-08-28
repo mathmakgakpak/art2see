@@ -1,5 +1,5 @@
 import { calculateDistance, sleep } from "../utils";
-import { availableApis } from "./api";
+import OWOPEvents from "./events";
 import { updatePlayerPacket } from "./packets";
 
 
@@ -8,8 +8,7 @@ const maxTeleportDistance = 10_000 - 2; // that's the maximum **distance** you c
 // -2 just to be safe
 
 export function centerCameraAt(x: number, y: number) {
-    if (availableApis.vanilla)
-        availableApis.vanilla.emit(availableApis.eventsList.net.world.teleported, x, y);
+    OWOP.emit(OWOPEvents.net.world.teleported, x, y);
 }
 
 function decenterCameraX(x: number, zoom: number) {
@@ -25,8 +24,8 @@ function decenterCameraY(y: number, zoom: number) {
  * @param y 
  */
 export function cameraTeleport(x: number, y: number) {
-    const zoom = availableApis.vanilla.camera.zoom;
-    const { x: mx, y: my } = availableApis.vanilla.mouse;
+    const zoom = OWOP.camera.zoom;
+    const { x: mx, y: my } = OWOP.mouse;
 
     // decenter the coordinates so the coords we specify would be in left top corner
     const decenteredX = decenterCameraX(x, zoom);
@@ -40,15 +39,15 @@ export function cameraTeleport(x: number, y: number) {
 
 
 export function teleport(x: number, y: number) {
-    const ws = availableApis.net?.connection;
-    if (ws?.readyState !== WebSocket.OPEN || !availableApis.vanilla) return false;
+    const ws = OWOP.net?.connection;
+    if (ws?.readyState !== WebSocket.OPEN || !OWOP) return false;
 
-    const ABuf = updatePlayerPacket(x, y, availableApis.vanilla.player.toolId || 0, availableApis.vanilla.player.selectedColor);
+    const ABuf = updatePlayerPacket(x, y, OWOP.player.toolId || 0, OWOP.player.selectedColor);
     ws.send(ABuf);
     return true;
 }
 
-// Took it from owop it's  https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+// Took it from owop it's https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 export function* line(x1: number, y1: number, x2: number, y2: number) {
     var dx = Math.abs(x2 - x1), sx = x1 < x2 ? 1 : -1;
     var dy = -Math.abs(y2 - y1), sy = y1 < y2 ? 1 : -1;
@@ -122,11 +121,10 @@ function getLastPixelBeforeBarrier(x1: number, y1: number, x2: number, y2: numbe
             lastY = tpY;
         }
     }
-    if(!shouldBreakIfOutsideTheBorder) return; // it didn't cross the barrier through all iterations
+    if(!shouldBreakIfOutsideTheBorder) return; // it didn't cross the barrier
     return {
         x: lastX,
-        y: lastY,
-        distance: calculateDistance(lastX, lastY, x2, y2)
+        y: lastY
     };
 }
 
@@ -140,49 +138,47 @@ let farTeleporting = false;
  * 
  * @param x 
  * @param y 
- * @param wait - amount of ms to wait after each teleport 
+ * @param delay - amount of ms to wait after each teleport 
  * @returns false if it can't teleport because it is already teleporting or number of teleports  
  */
-export async function farTeleport(x: number, y: number, wait: number = 200, forceCamera: boolean = false ) {
+export async function farTeleport(x: number, y: number, delay: number = 200, forceCamera: boolean = false ) {
     if (farTeleporting) return false;
     
-    // const eventWaiter = new EventWaiter(availableApis.vanilla, availableApis.eventsList.net)
-
     // starting point x
-    let { tileX: spx, tileY: spy } = availableApis.vanilla.mouse;
+    let { tileX: spx, tileY: spy } = OWOP.mouse;
     if(spx === x && spy === y) return 0;
 
     farTeleporting = true;
 
     let tpMethod;
     let updatePlayerCopy: any;
-    if (availableApis.net && !forceCamera) {
+    if (OWOP.net && !forceCamera) {
         tpMethod = teleport;
         // @ts-ignore - preventing user from sending move packets
-        updatePlayerCopy = availableApis.net.protocol.constructor.prototype.sendUpdates;
+        updatePlayerCopy = OWOP.net.protocol.constructor.prototype.sendUpdates;
         // @ts-ignore
-        availableApis.net.protocol.constructor.prototype.sendUpdates = () => { };
+        OWOP.net.protocol.constructor.prototype.sendUpdates = () => { };
     } else {
         tpMethod = cameraTeleport; // sadly I don't know any way to prevent chunk requesting
     }
     
     async function finish() {
         centerCameraAt(x, y);
-        await sleep(wait);
+        await sleep(delay);
 
         if (updatePlayerCopy) {
             // @ts-ignore
-            availableApis.net.protocol.constructor.prototype.sendUpdates = updatePlayerCopy;
+            OWOP.net.protocol.constructor.prototype.sendUpdates = updatePlayerCopy;
             // @ts-ignore
-            availableApis.net.protocol.sendUpdates();
-            await sleep(wait);
+            OWOP.net.protocol.sendUpdates();
+            await sleep(delay);
         }
         farTeleporting = false;
     }
 
     if(!isOutsideTeleportBarrier(x, y)) {
         tpMethod(x, y);
-        await sleep(wait);
+        await sleep(delay);
 
         await finish();
         return 1;
@@ -196,22 +192,26 @@ export async function farTeleport(x: number, y: number, wait: number = 200, forc
     // create a line from player to destination the barrier and get
     // last pixel before passing the barrier if it exists
     const pixelPassingTheBarrier = getLastPixelBeforeBarrier(spx, spy, x, y)
+    const distanceFromPixel = pixelPassingTheBarrier ? calculateDistance(pixelPassingTheBarrier.x, pixelPassingTheBarrier.y, x, y) : Infinity;
     // ^
-    const fromSpawnToBarrier = getLastPixelBeforeBarrier(0, 0, x, y);
+    const distanceFromSpawnToDestination = calculateDistance(0, 0, x, y);
+    
+    const shortest = Math.min(distanceFromPlayerToDestination, distanceFromPixel, distanceFromSpawnToDestination);
 
-    const shortest = Math.min(distanceFromPlayerToDestination, pixelPassingTheBarrier?.distance || Infinity, fromSpawnToBarrier?.distance || Infinity);
-
-    if(shortest === pixelPassingTheBarrier?.distance) {
+    if(shortest === distanceFromPixel && pixelPassingTheBarrier) {
         spx = pixelPassingTheBarrier.x;
         spy = pixelPassingTheBarrier.y;
         tpMethod(spx, spy)
-        await sleep(wait);
+        await sleep(delay);
         // console.log("From player to barrier", pixelPassingTheBarrier.distance)
-    } else if(shortest === fromSpawnToBarrier?.distance) {
-        spx = fromSpawnToBarrier.x;
-        spy = fromSpawnToBarrier.y;
-        tpMethod(spx, spy)
-        await sleep(wait);
+    } else if(shortest === distanceFromSpawnToDestination) {
+        const fromSpawnToBarrier = getLastPixelBeforeBarrier(spx, spy, x, y)
+        if (fromSpawnToBarrier) {
+            spx = fromSpawnToBarrier.x;
+            spy = fromSpawnToBarrier.y;
+            tpMethod(spx, spy)
+            await sleep(delay);
+        }
         // console.log("From spawn to barrier", fromSpawnToBarrier.distance);
     }/*  else {
         console.log("From player to destination", distanceFromPlayerToDestination);
@@ -242,7 +242,7 @@ export async function farTeleport(x: number, y: number, wait: number = 200, forc
         //     `Distance left: ${distanceLeft}`
         // );
         
-        await sleep(wait);
+        await sleep(delay);
     }
 
     // console.log(lastX, lastY, x, y, Math.hypot(x - lastX, y - lastY), "last");

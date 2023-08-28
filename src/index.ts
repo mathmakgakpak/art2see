@@ -5,16 +5,25 @@ import GUI from "./GUI"
 import { ArtInfoInterface } from "./interfaces";
 import A2SStyle from "./styles";
 import { centerCameraAt, cameraTeleport, farTeleport, isOutsideTeleportBarrier, teleport } from "./OWOP/utils";
-import { availableApis, checkOWOPAvailability } from "./OWOP/api";
+import { sleep } from "./utils";
 // import {SmartBuffer} from "smart-buffer";
 
 
-
 async function load() {
-    if(!await checkOWOPAvailability()) {
-        console.error("No OWOP variable or the site took too long to load");
-        return;
+    // wait for OWOP to be availible
+    {
+        let i = 0;
+        while(!OWOP) {
+            await sleep(10);
+            i += 10;
+            if(i >= 20_000) {
+                 // failed to load
+                console.error("No OWOP variable or the site took too long to load!");
+                return false;
+            }
+        }
     }
+
 
     const windowsManager = new WindowsManager(A2SStyle);
     const gui = new GUI();
@@ -50,7 +59,6 @@ if(!PRODUCTION) {
         cameraTeleport,
         farTeleport,
         isOutsideTeleportBarrier,
-        availableApis,
         teleport
         // require(name: string) {
         //     // if(name === "A2NStyles.css") return;

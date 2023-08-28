@@ -1,13 +1,13 @@
-import Page from "../GUIPage";
-import { ArtInfoInterface } from "../interfaces";
-import { mkHTML } from "../utils";
+import Page from "../../GUIPage";
+import { ArtInfoInterface } from "../../interfaces";
+import { mkHTML } from "../../utils";
 
  // i want to put here art info. coords and the other things see ./interfaces
 class CollectionPage extends Page {
     rows: HTMLElement = mkHTML("div");
 
     constructor() {
-        super("Collection", "")
+        super("Collection")
 
         this.pageElement.appendChild(this.rows);
     }

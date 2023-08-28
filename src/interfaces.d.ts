@@ -1,23 +1,33 @@
 
+
+// Reference
 export interface Vector2D {
     x: number;
     y: number;
 }
-// we don't need all of the features immediately
+
+export interface AuthorInfo {
+    id: string;
+    name: string;
+    description: string;
+}
 export interface ArtInfoInterface {
-    id?: number;
+    id: string;
     name: string;
     position: Vector2D;
     submitted?: Date;
 
-    info: {
+    categories: string[]; // eg porn, furry or a search function that works good instead
+    description: string; // prevent xss attacks
+    
+    sender: {
+        id: string;
         name: string;
-        category: string; // eg porn, furry or a search function that works good instead
-        description: string; // prevent xss attacks
     }
-    author: {
-        name: string; // probably discord one
-        sent?: number; // how much art did he sent
+    
+    author?: {
+        id?: string; // if he even uses Art2See
+        name: string;
     }
     
     likes?: number;
@@ -46,7 +56,7 @@ export interface OWOPInterface {
         get toolId(): number | undefined;
     }
     // TODO fix typing here
-    emit(eventId: eventIds.net.world.teleported, x: number, y: number): void;
+    emit(eventId: OWOPEvents.net.world.teleported, x: number, y: number): void;
     // windowSys: {
     //     addWindow(t: any): any
     //     centerWindow(t: any): any

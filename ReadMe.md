@@ -21,5 +21,7 @@ User can send image descriptions with coordinates (can make them private)
 - option to not publicize coordinates
 ### after it is in a working state
 - add addon to https://github.com/LapisHusky/betteropm
+# Contact
+Discord: felpcereti
 # License
 GNU GPLv3

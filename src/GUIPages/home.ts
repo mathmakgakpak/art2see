@@ -3,7 +3,7 @@ import { mkHTML } from "../utils";
 
 class HomePage extends Page {
     constructor() {
-        super("Home", "")
+        super("Home")
         const test = mkHTML("div");
         test.innerText = "bob <a>";
         this.pageElement.appendChild(test);
