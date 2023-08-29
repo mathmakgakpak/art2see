@@ -1,17 +1,13 @@
 import { mkHTML } from "../utils";
-class InteractivePositionElement {
+class Position {
     element = mkHTML("span", {
         className: "position"
     });
-    elementX = mkHTML("input", {
-        // className: ""
-        type: "number",
-        value: "0",
+    elementX = mkHTML("span", {
+        textContent: "0",
     })
-    elementY = mkHTML("input", {
-        // className: ""
-        type: "number",
-        value: "0",
+    elementY = mkHTML("span", {
+        textContent: "0",
     })
     constructor(
         x: number = 0,
@@ -19,26 +15,28 @@ class InteractivePositionElement {
     ) {
         this.x = x;
         this.y = y;
-        this.element.append(this.elementX, this.elementY);
+        const XElem = mkHTML("span", {
+            textContent: "X:"
+        });
+        const YElem = mkHTML("span", {
+            textContent: "Y:"
+        });
+
+        this.element.append(XElem, this.elementX, YElem, this.elementY);
     }
     set x(value: number) {
-        this.elementX.value = value.toString();
+        this.elementX.textContent = value.toString();
     }
     get x(): number {
-        return +this.elementX.value;
+        return +(this.elementX.textContent || "");
     }
     set y(value: number) {
-        this.elementY.value = value.toString();
+        this.elementY.textContent = value.toString();
     }
     get y(): number {
-        return +this.elementY.value;
+        return +(this.elementX.textContent || "");
     }
-    get disabled(): boolean {
-        return this.elementX.disabled;
-    }
-    set disabled(value: boolean) {
-        this.elementX.disabled = this.elementY.disabled = value;
-    }
+
 }
 
-export default InteractivePositionElement;
+export default Position;

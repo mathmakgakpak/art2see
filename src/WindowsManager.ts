@@ -1,4 +1,5 @@
 
+import { THEMES } from "./interfaces";
 import { mkHTML } from "./utils";
 
 
@@ -58,22 +59,32 @@ export class Window {
 
         this.container.style.transform = `translate(${x}px, ${y}px)`;
     }
+    REQUEST_STYLE_CHANGE(theme: THEMES) {
+
+    }
 }
 
 export default class WindowsManager {
     public windows: Window[] = [];
     public space: HTMLDivElement = mkHTML("div");
     public shadowRoot: ShadowRoot = this.space.attachShadow({ mode: "open" });
+    public windowsSpace = mkHTML("div", {
+        className: "windows-space"
+    });
 
     constructor(
         private style: HTMLStyleElement,
     ) {
-        this.shadowRoot.appendChild(this.style);
+        this.shadowRoot.append(this.style, this.windowsSpace);
+        this.changeStyle(/* localStorage.getItem() */ "dark")
     }
-
+    changeStyle(theme: THEMES) {
+        this.windowsSpace.classList.remove("dark-theme", "light-theme");
+        this.windowsSpace.classList.add(`${theme}-theme`);
+    }
     addWindow(window: Window) {
-        this.shadowRoot.appendChild(window.container);
+        window.REQUEST_STYLE_CHANGE = this.changeStyle.bind(this);
+        this.windowsSpace.appendChild(window.container);
         this.windows.push(window);
-
     }
 }

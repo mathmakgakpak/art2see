@@ -1,41 +1,38 @@
+import Position from "../../elements/Position";
 import { ArtInfoInterface } from "../../interfaces";
 import { mkHTML } from "../../utils";
 
 class ArtInfoElement {
     element = mkHTML("div", {
-        className: "ArtInfoElement"
+        className: "art-info-element"
     });
     name = mkHTML("span");
     categories = mkHTML("span");
-    description = mkHTML("div");
+    description = mkHTML("p");
     
-    position = mkHTML("div")
-    positionX = mkHTML("span");
-    positionY = mkHTML("span");
+    position = new Position();
 
     constructor(
         public artInfo: ArtInfoInterface
     ) {
         // name
+        const header = mkHTML("header");
         this.name.textContent = artInfo.name;
-        this.name.ariaLabel = artInfo.id;
+        this.name.dataset.tooltip = artInfo.id;
 
         this.categories.textContent = artInfo.categories.join(", ");
+        header.append(this.name, this.categories);
+        
+        // description
         this.description.textContent = artInfo.description;
 
         // position
-        const XElem = mkHTML("span", {
-            textContent: "X:"
-        });
-        this.positionX.textContent = artInfo.position.x.toString();
-        const YElem = mkHTML("span", {
-            textContent: "Y:"
-        });
-        this.positionY.textContent = artInfo.position.y.toString();
-        this.position.append(XElem, this.positionX, YElem, this.positionY);
+        this.position.x = artInfo.x;
+        this.position.y = artInfo.y;
+
 
         // adding all elements
-        this.element.append(this.name, this.categories, this.description, this.position);
+        this.element.append(header, this.description, this.position.element);
     }
 }
 export default ArtInfoElement

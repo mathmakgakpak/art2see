@@ -13,53 +13,60 @@ async function load() {
     // wait for OWOP to be availible
     {
         let i = 0;
-        while(!OWOP) {
+        while (!OWOP) {
             await sleep(10);
             i += 10;
-            if(i >= 20_000) {
-                 // failed to load
+            if (i >= 20_000) {
+                // failed to load
                 console.error("No OWOP variable or the site took too long to load!");
                 return false;
             }
         }
     }
 
-
     const windowsManager = new WindowsManager(A2SStyle);
     const gui = new GUI();
     windowsManager.addWindow(gui);
 
     const Arts: ArtInfoInterface[] = [];
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 5; i++) {
         Arts.push(
-            // @ts-ignore just for now
             {
-                name: "test",
-                position: {
-                    x: 13,
-                    y: 43
-                }
+                name: "Cute anime woman",
+                world: "",
+                x: Math.random() * 1000 - 500,
+                y: Math.random() * 1000 - 500,
+
+                id: "bob fake id",
+                categories: ["NSFW", "anime"],
+                description: "big bo-obs anime woman",
+                sender: {
+                    id: "someuserid",
+                    name: "Anime Lover"
+                },
+                uniqueTeleports: 0,
+                submitted: new Date()
             }
         )
     }
+    gui.collectionPage.updateArtsInfo(Arts);
 
     gui.move(window.innerWidth * 0.8, window.innerHeight * 0.2)
     document.body.appendChild(windowsManager.space);
 }
 
-if(PRODUCTION) {
-    window.addEventListener("load", load, {once: true});
+if (PRODUCTION) {
+    window.addEventListener("load", load, { once: true });
 } else {
     load();
 }
-
-if(!PRODUCTION) {
+if (!PRODUCTION) {
     module.exports = {
         centerCameraAt,
         cameraTeleport,
         farTeleport,
         isOutsideTeleportBarrier,
-        teleport
+        teleport,
         // require(name: string) {
         //     // if(name === "A2NStyles.css") return;
         //     // TODO finish it

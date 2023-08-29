@@ -1,10 +1,4 @@
-:host {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* prevent from clicking */
-}
-:root {
+.light-theme {
     /* https://realtimecolors.com/?colors=091b11-ecf9f2-9abbdf-f2e1d4-be3c83 */
     --text: #091b11;
     --background: #ecf9f2;
@@ -13,55 +7,93 @@
     --accent: #be3c83;
 }
 
-/* button {
-    
-}  */
+.dark-theme {
+    /* https://realtimecolors.com/?colors=c2d2d0-353b38-242c31-14340d-e5aecc */
+    --text: #c2d2d0;
+    --background: #353b38;
+    --primary: #242c31;
+    --secondary: #14340d;
+    --accent: #e5aecc;
+}
+
+
+:host,
+.windows-space {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    /* prevent from clicking */
+
+    color: var(--text);
+    text-shadow: none;
+}
+
+
+button {
+    background-color: var(--primary);
+    color: inherit;
+}
 
 .window {
     position: absolute;
     pointer-events: initial;
+    /* make it clickable again */
+    background-color: var(--background);
+
+    border: 3px solid;
+    border-color: var(--accent);
+    border-radius: 5px;
 }
-.window > .title {
+
+.window>.title {
     display: flex;
     justify-content: center;
 }
 
 .main-window {
-    background-color: rgba(192, 199, 200, 1.0);
-    
-    border: 3px solid;
-    border-color: #a89f90;
-    border-radius: 5px;
+    max-height: 200px;
 }
-.main-window > .title > :nth-child(1) {
+
+.main-window>.title> :nth-child(1) {
     color: #c41958;
 }
-.main-window > .title > :nth-child(2) {
+
+.main-window>.title> :nth-child(2) {
     color: #37d644;
 }
-.main-window > .title > :nth-child(3) {
+
+.main-window>.title> :nth-child(3) {
     color: #4237d6;
 }
-.main-window > .content > .page-buttons {
+
+.main-window>.content>.page-buttons {
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
 }
 
 .Page {
     display: flex;
     flex-direction: column;
     padding: 0.2rem;
-}
 
-.teleport-page > .delay-wrapper {
+    
+}
+/* .hidden {
+    display: none;
+} */
+
+.teleport-page>.delay-wrapper {
     display: flex;
     flex-direction: row;
 }
-.teleport-page > .delay-wrapper > span {
+
+.teleport-page>.delay-wrapper>span {
     flex: 1;
     margin-right: 1rem;
 }
-.teleport-page > .delay-wrapper > input {
+
+.teleport-page>.delay-wrapper>input {
     flex: 2;
 }
 
@@ -70,7 +102,52 @@
     display: flex;
 }
 
-.ArtInfoElement {
+.art-rows {
+    overflow: auto;
+}
+
+.art-rows>.art-info-element {
     display: flex;
     flex-direction: column;
+    border: 1px solid var(--secondary);
+}
+
+/* https://stackoverflow.com/questions/7117073/add-a-tooltip-to-a-div#comment112454657_25813336 */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+[data-tooltip]:before {
+    /* needed - do not touch */
+    content: attr(data-tooltip);
+    position: absolute;
+    display: none;
+
+    /* customizable */
+    transition: all 0.15s ease;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 1px silver;
+}
+
+[data-tooltip]:hover:before {
+    /* needed - do not touch */
+    display: inline-block;
+    animation: fadeIn 0.3s;
+
+    /* customizable */
+    background: var(--background);
+    margin-top: -50px;
+    margin-left: 20px;
+}
+
+[data-tooltip]:not([data-tooltip-persistent]):before {
+    pointer-events: none;
 }

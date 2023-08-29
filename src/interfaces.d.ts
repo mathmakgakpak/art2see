@@ -14,11 +14,16 @@ export interface AuthorInfo {
 export interface ArtInfoInterface {
     id: string;
     name: string;
-    position: Vector2D;
-    submitted?: Date;
+
+    world: string;
+    x: number;
+    y: number;
+
+    submitted: Date;
 
     categories: string[]; // eg porn, furry or a search function that works good instead
-    description: string; // prevent xss attacks
+    description: string;
+    
     
     sender: {
         id: string;
@@ -32,6 +37,7 @@ export interface ArtInfoInterface {
     
     likes?: number;
     dislikes?: number;
+    uniqueTeleports: number;
 }
 
 export interface OWOPInterface {
@@ -44,6 +50,7 @@ export interface OWOPInterface {
         get y(): number;
     }
     mouse: {
+        buttons: number;
         x: number; // it is not a getter but idk if you can change it
         y: number;
         get tileX(): number; // what tile (integer)
@@ -54,6 +61,26 @@ export interface OWOPInterface {
     player: {
         selectedColor: [number, number, number];
         get toolId(): number | undefined;
+    }
+    world: {
+        getPixel(x:number, y: number): [number, number, number] | undefined
+    }
+    fx: {
+        player: {
+            none: null
+        }
+    }
+    cursors: {
+        select: any;
+    }
+    RANK: {
+        NONE: 0;
+        USER: 1;
+        MODERATOR: 2;
+        ADMIN: 3;
+    }
+    tools: {
+        class: any
     }
     // TODO fix typing here
     emit(eventId: OWOPEvents.net.world.teleported, x: number, y: number): void;
@@ -66,3 +93,5 @@ export interface OWOPInterface {
     }
     require?(name: string): any;
 }
+
+export type THEMES = "dark" | "light";

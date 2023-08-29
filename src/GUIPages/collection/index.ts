@@ -1,39 +1,30 @@
 import Page from "../../GUIPage";
 import { ArtInfoInterface } from "../../interfaces";
 import { mkHTML } from "../../utils";
+import ArtInfoElement from "./ArtInfo";
 
  // i want to put here art info. coords and the other things see ./interfaces
 class CollectionPage extends Page {
-    rows: HTMLElement = mkHTML("div");
+    rows: HTMLElement = mkHTML("div", {
+        className: "art-rows"
+    });
 
     constructor() {
         super("Collection")
+
 
         this.pageElement.appendChild(this.rows);
     }
     
     addArt(artInfo: ArtInfoInterface) {
-        const row = mkHTML("div", /* {
-            display: "flex"
-        } */);
-        
-        const nameField = mkHTML("div")
-        nameField.innerHTML = artInfo.name;
+        const artInfoElement = new ArtInfoElement(artInfo);
 
-        row.appendChild(nameField);
-
-
-        const coordsField = mkHTML("div");
-        
-        coordsField.innerHTML = `X: ${artInfo.position.x} Y: ${artInfo.position.x}`;
-
-        coordsField.addEventListener("click", mouseEvent => {
-            
+        artInfoElement.position.element.addEventListener("click", () => {
+            this.ON_USER_REQUESTS_TELEPORT(artInfo.x, artInfo.y);
         })
 
-        row.appendChild(coordsField);
-        this.rows.appendChild(row);
-        return row;
+        this.rows.appendChild(artInfoElement.element);
+        return artInfoElement;
     }
 
     updateArtsInfo(artsInfo: ArtInfoInterface[]) {
@@ -42,6 +33,9 @@ class CollectionPage extends Page {
 
         // push new elements
         artsInfo.forEach(artInfo => this.addArt(artInfo));
+    }
+    ON_USER_REQUESTS_TELEPORT(x: number, y: number) {
+        // event for GUI
     }
 }
 

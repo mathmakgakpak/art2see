@@ -1,6 +1,6 @@
 import Page from "../GUIPage";
 import { mkHTML } from "../utils";
-import InteractivePositionElement from "../elements/Position";
+import InteractivePositionElement from "../elements/InteractivePosition";
 import { farTeleport } from "../OWOP/utils";
 
 class TeleportPage extends Page {
@@ -23,8 +23,8 @@ class TeleportPage extends Page {
         const delayWrapper = mkHTML("div", {
             className: "delay-wrapper"
         });
-        const delayText = mkHTML("div", {
-            textContent: "Delay"
+        const delayText = mkHTML("span", {
+            textContent: "Delay: "
         });
         this.delay = mkHTML("input", {
             type: "number",
