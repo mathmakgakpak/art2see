@@ -4,7 +4,8 @@ Work in progress OWOP addon to make
 are welcome. To make it easier for you to change stuff read [how to install local scripts](https://violentmonkey.github.io/posts/how-to-edit-scripts-with-your-favorite-editor/#install-a-local-script)\
 Open http://localhost:8080/Art2See.user.js \
 How To install Extension \
-![Video](./how-to-code.mp4)
+
+https://github.com/mathmakgakpak/art2see/assets/44949126/0c02b7ac-6cfc-40e0-942a-6b4e3ad761a1
 
 <!-- # General idea
 User can send image descriptions with coordinates (can make them private) -->
