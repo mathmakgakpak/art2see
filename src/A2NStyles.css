@@ -50,9 +50,12 @@ button {
     display: flex;
     justify-content: center;
 }
+/* .window > .content {
+
+} */
 
 .main-window {
-    max-height: 200px;
+
 }
 
 .main-window>.title> :nth-child(1) {
@@ -76,8 +79,6 @@ button {
     display: flex;
     flex-direction: column;
     padding: 0.2rem;
-
-    
 }
 /* .hidden {
     display: none;
@@ -103,7 +104,8 @@ button {
 }
 
 .art-rows {
-    overflow: auto;
+    overflow-y: scroll;
+    max-height: 200px;
 }
 
 .art-rows>.art-info-element {

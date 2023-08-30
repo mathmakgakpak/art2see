@@ -5,7 +5,7 @@ class HomePage extends Page {
     constructor() {
         super("Home")
         const test = mkHTML("div");
-        test.innerText = "bob <a>";
+        test.textContent = "Do not close the tab. sus <a>";
         this.pageElement.appendChild(test);
     }
 }

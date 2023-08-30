@@ -1,5 +1,6 @@
 import * as esbuild from 'esbuild'
 import minimist from 'minimist';
+import fs from "fs/promises";
 
 const args = minimist(process.argv.slice(2));
 
@@ -9,7 +10,7 @@ const MINIFY = Boolean(args.minify);
 
 const ctx = await esbuild.context({
     entryPoints: ["./src/index.ts"],
-    outfile: "./build.js",
+    outfile: "./Art2See.user.js",
     bundle: true,
     minify: PRODUCTION || MINIFY,
 
@@ -23,6 +24,9 @@ const ctx = await esbuild.context({
     define: {
         "PRODUCTION": PRODUCTION.toString() // yes it is a boolean but you need to pass a string 
         // "STANDALONE"
+    },
+    banner: {
+        js: await fs.readFile("./meta.user.js", "utf-8")
     }
 })
 

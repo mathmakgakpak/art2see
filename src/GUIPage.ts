@@ -1,3 +1,4 @@
+import { THEMES } from "./interfaces";
 import { mkHTML } from "./utils";
 
 class Page {
@@ -15,7 +16,9 @@ class Page {
     set isVisible(value: boolean) {
         this.pageElement.style.display = value ? "" : "none";
     }
-
+    REQUEST_THEME_CHANGE(theme: THEMES) {
+        
+    }
 }
 
 export default Page;

@@ -3,7 +3,8 @@
     "prod": "node ./esbuild.mjs --production",
     "production": "node ./esbuild.mjs --production",
     "watch": "node ./esbuild.mjs --watch",
-    "dev": "node ./esbuild.mjs"
+    "dev": "node ./esbuild.mjs",
+    "hostscript": "http-server -c-1"
   },
   "dependencies": {
     "@tsconfig/recommended": "^1.0.2",
@@ -14,6 +15,8 @@
     "smart-buffer": "^4.2.0"
   },
   "devDependencies": {
-    "@types/node": "^20.5.1"
+    "@types/node": "^20.5.1",
+    "@types/tampermonkey": "^4.20.1",
+    "http-server": "^14.1.1"
   }
 }

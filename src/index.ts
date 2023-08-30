@@ -9,21 +9,7 @@ import { sleep } from "./utils";
 // import {SmartBuffer} from "smart-buffer";
 
 
-async function load() {
-    // wait for OWOP to be availible
-    {
-        let i = 0;
-        while (!OWOP) {
-            await sleep(10);
-            i += 10;
-            if (i >= 20_000) {
-                // failed to load
-                console.error("No OWOP variable or the site took too long to load!");
-                return false;
-            }
-        }
-    }
-
+function load() {
     const windowsManager = new WindowsManager(A2SStyle);
     const gui = new GUI();
     windowsManager.addWindow(gui);
@@ -55,11 +41,8 @@ async function load() {
     document.body.appendChild(windowsManager.space);
 }
 
-if (PRODUCTION) {
-    window.addEventListener("load", load, { once: true });
-} else {
-    load();
-}
+window.addEventListener("load", load, { once: true });
+
 if (!PRODUCTION) {
     module.exports = {
         centerCameraAt,

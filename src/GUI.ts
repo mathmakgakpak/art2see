@@ -6,6 +6,7 @@ import CollectionPage from "./GUIPages/collection";
 import { Window } from "./WindowsManager";
 import TeleportPage from "./GUIPages/teleport";
 import { THEMES } from "./interfaces";
+import SettingsPage from "./GUIPages/settings";
 
 class GUI extends Window {
     pageButtonsElements: HTMLDivElement = mkHTML("div", {
@@ -17,6 +18,8 @@ class GUI extends Window {
     collectionPage = new CollectionPage();
 
     teleportPage = new TeleportPage();
+
+    settingsPage = new SettingsPage();
     
     pages: Readonly<Page[]> = [this.homePage, this.collectionPage, this.teleportPage];
     theme: THEMES = "dark";
@@ -25,25 +28,9 @@ class GUI extends Window {
         const titleNodes: (HTMLSpanElement | HTMLButtonElement)[] = ["Art", "2", "See"].map(x => mkHTML("span", {
             textContent: x
         }));
-        const changeStyleButton = mkHTML("button", {
-            textContent: "🌕"
-        });
-        
-        changeStyleButton.addEventListener("click", () => {
-            if(this.theme === "light") {
-                this.theme = "dark";
-                changeStyleButton.textContent = "🌕";
-            } else {
-                this.theme = "light";
-                changeStyleButton.textContent = "☀";
-            }
-            this.REQUEST_STYLE_CHANGE(this.theme);
-        });
-        titleNodes.push(changeStyleButton);
-
         super("Main", titleNodes);
         
-        this.container.classList.add("main-window")
+        this.container.classList.add("main-window");
 
         this.initPageButtons();
         this.initPages();
@@ -71,6 +58,7 @@ class GUI extends Window {
             this.teleportPage.position.y = y;
             this.switchPage("Teleport");
         }
+        this.settingsPage.REQUEST_THEME_CHANGE = this.REQUEST_THEME_CHANGE;
 
         this.switchPage("Home");
         
