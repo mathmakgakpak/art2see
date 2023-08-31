@@ -1,4 +1,8 @@
 {
+  "name": "art2see",
+  "version": "0.0.1",
+  "description": "Art 2 See is a script for OWOP...",
+
   "scripts": {
     "prod": "node ./esbuild.mjs --production",
     "production": "node ./esbuild.mjs --production",

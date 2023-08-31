@@ -112,6 +112,7 @@ button {
     display: flex;
     flex-direction: column;
     border: 1px solid var(--secondary);
+    user-select: text; /* makes text selectable */
 }
 
 /* https://stackoverflow.com/questions/7117073/add-a-tooltip-to-a-div#comment112454657_25813336 */
