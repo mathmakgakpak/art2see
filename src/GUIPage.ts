@@ -1,9 +1,11 @@
+import WindowsManager from "./WindowsManager";
 import { THEMES } from "./interfaces";
 import { mkHTML } from "./utils";
 
 class Page {
     pageElement: HTMLDivElement;
     constructor(
+        public windowsManager: WindowsManager,
         public name: string
     ) {
         this.pageElement = mkHTML("div", {
@@ -15,9 +17,6 @@ class Page {
     }
     set isVisible(value: boolean) {
         this.pageElement.style.display = value ? "" : "none";
-    }
-    REQUEST_THEME_CHANGE(theme: THEMES) {
-        
     }
 }
 

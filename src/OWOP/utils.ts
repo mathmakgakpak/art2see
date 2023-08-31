@@ -48,6 +48,14 @@ export function teleport(x: number, y: number) {
 }
 
 // Took it from owop it's https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+/**
+ * Every number needs to be an integer (can't have a decimal point).
+ * 
+ * @param x1 
+ * @param y1 
+ * @param x2 
+ * @param y2 
+ */
 export function* line(x1: number, y1: number, x2: number, y2: number) {
     var dx = Math.abs(x2 - x1), sx = x1 < x2 ? 1 : -1;
     var dy = -Math.abs(y2 - y1), sy = y1 < y2 ? 1 : -1;
@@ -136,13 +144,15 @@ let farTeleporting = false;
 // if i wanted to replace the wait I would probably need to overhear the websocket communication and get the player id from world update see: https://i.imgur.com/x9CjWfo.png
 /**
  * 
- * @param x 
- * @param y 
+ * @param x - an integer
+ * @param y - an integer
  * @param delay - amount of ms to wait after each teleport 
  * @returns false if it can't teleport because it is already teleporting or number of teleports  
  */
 export async function farTeleport(x: number, y: number, delay: number = 200, forceCamera: boolean = false ) {
     if (farTeleporting) return false;
+    x = Math.round(x); // it is here because the line alghoritm doesn't work on floats
+    y = Math.round(y);
     
     // starting point x
     let { tileX: spx, tileY: spy } = OWOP.mouse;

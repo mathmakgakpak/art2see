@@ -19,6 +19,7 @@ export class Window {
     public y: number = 0;
 
     constructor(
+        public windowsManager: WindowsManager,
         public name: string,
         public titleNodes: Node[]
     ) {
@@ -59,9 +60,6 @@ export class Window {
 
         this.container.style.transform = `translate(${x}px, ${y}px)`;
     }
-    REQUEST_THEME_CHANGE(theme: THEMES) {
-
-    }
 }
 
 export default class WindowsManager {
@@ -83,7 +81,6 @@ export default class WindowsManager {
         this.windowsSpace.classList.add(`${theme}-theme`);
     }
     addWindow(window: Window) {
-        window.REQUEST_THEME_CHANGE = this.changeStyle.bind(this);
         this.windowsSpace.appendChild(window.container);
         this.windows.push(window);
     }

@@ -1,4 +1,5 @@
 import Page from "../GUIPage";
+import WindowsManager from "../WindowsManager";
 import { mkHTML } from "../utils";
 class SendArtPage extends Page {
   canvas = mkHTML('canvas', {
@@ -6,8 +7,8 @@ class SendArtPage extends Page {
     height: 0,
   });
   ctx = this.canvas.getContext("2d");
-  constructor() {
-    super("Send Art");
+  constructor(windowsManager: WindowsManager) {
+    super(windowsManager, "Send Art");
 
   }
 

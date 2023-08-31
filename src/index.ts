@@ -11,7 +11,7 @@ import { sleep } from "./utils";
 
 function load() {
     const windowsManager = new WindowsManager(A2SStyle);
-    const gui = new GUI();
+    const gui = new GUI(windowsManager);
     windowsManager.addWindow(gui);
 
     const Arts: ArtInfoInterface[] = [];

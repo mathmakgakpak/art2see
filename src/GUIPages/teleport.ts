@@ -1,7 +1,8 @@
 import Page from "../GUIPage";
-import { mkHTML } from "../utils";
+import { addTextBeforeElement, mkHTML } from "../utils";
 import InteractivePositionElement from "../elements/InteractivePosition";
 import { farTeleport } from "../OWOP/utils";
+import WindowsManager from "../WindowsManager";
 
 class TeleportPage extends Page {
         position = new InteractivePositionElement()
@@ -9,8 +10,9 @@ class TeleportPage extends Page {
             textContent: "Teleport!"
         });
         delay: HTMLInputElement
-    constructor() {
-        super("Teleport");
+    constructor(windowsManager: WindowsManager) {
+        super(windowsManager, "Teleport");
+
         this.pageElement.classList.add("teleport-page");
         
         this.teleportButton.addEventListener("click", async () => {
@@ -20,20 +22,15 @@ class TeleportPage extends Page {
 
             this.teleportButton.disabled = this.position.disabled = false;
         });
-        const delayWrapper = mkHTML("div", {
-            className: "delay-wrapper"
-        });
-        const delayText = mkHTML("span", {
-            textContent: "Delay: "
-        });
+        
         this.delay = mkHTML("input", {
             type: "number",
             value: "200",
             min: "50"
         });
-        delayWrapper.append(delayText, this.delay);
+        const delayContainer = addTextBeforeElement("Delay: ", this.delay) 
 
-        this.pageElement.append(this.position.element, this.teleportButton, delayWrapper);
+        this.pageElement.append(this.position.element, this.teleportButton, delayContainer);
     }
 }
 

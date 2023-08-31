@@ -3,7 +3,7 @@ import { mkHTML } from "./utils";
 import Page from "./GUIPage";
 import HomePage from "./GUIPages/home";
 import CollectionPage from "./GUIPages/collection";
-import { Window } from "./WindowsManager";
+import WindowsManager, { Window } from "./WindowsManager";
 import TeleportPage from "./GUIPages/teleport";
 import { THEMES } from "./interfaces";
 import SettingsPage from "./GUIPages/settings";
@@ -13,22 +13,22 @@ class GUI extends Window {
         className: "page-buttons"
     });
 
-    homePage = new HomePage();
+    homePage = new HomePage(this.windowsManager);
     
-    collectionPage = new CollectionPage();
+    collectionPage = new CollectionPage(this.windowsManager);
 
-    teleportPage = new TeleportPage();
+    teleportPage = new TeleportPage(this.windowsManager);
 
-    settingsPage = new SettingsPage();
+    settingsPage = new SettingsPage(this.windowsManager);
     
-    pages: Readonly<Page[]> = [this.homePage, this.collectionPage, this.teleportPage];
+    pages: Readonly<Page[]> = [this.homePage, this.collectionPage, this.teleportPage, this.settingsPage];
     theme: THEMES = "dark";
 
-    constructor() {
-        const titleNodes: (HTMLSpanElement | HTMLButtonElement)[] = ["Art", "2", "See"].map(x => mkHTML("span", {
+    constructor(windowsManager: WindowsManager) {
+        const titleNodes = ["Art", "2", "See"].map(x => mkHTML("span", {
             textContent: x
         }));
-        super("Main", titleNodes);
+        super(windowsManager, "Main", titleNodes);
         
         this.container.classList.add("main-window");
 
@@ -58,7 +58,6 @@ class GUI extends Window {
             this.teleportPage.position.y = y;
             this.switchPage("Teleport");
         }
-        this.settingsPage.REQUEST_THEME_CHANGE = this.REQUEST_THEME_CHANGE;
 
         this.switchPage("Home");
         

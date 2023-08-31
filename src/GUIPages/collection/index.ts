@@ -1,4 +1,5 @@
 import Page from "../../GUIPage";
+import WindowsManager from "../../WindowsManager";
 import { ArtInfoInterface } from "../../interfaces";
 import { mkHTML } from "../../utils";
 import ArtInfoElement from "./ArtInfo";
@@ -9,8 +10,8 @@ class CollectionPage extends Page {
         className: "art-rows"
     });
 
-    constructor() {
-        super("Collection")
+    constructor(windowsManager: WindowsManager) {
+        super(windowsManager, "Collection")
 
 
         this.pageElement.appendChild(this.rows);

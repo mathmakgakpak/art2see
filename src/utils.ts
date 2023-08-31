@@ -13,6 +13,17 @@ export function mkHTML<T extends keyof HTMLElementTagNameMap>(
     return elm;
 }
 
+export function addTextBeforeElement(text: string, element: Node) {
+    const container = mkHTML("div");
+    // const textElement = mkHTML("span", {
+    //     textContent: text
+    // });
+    
+    container.append(text, element);
+    
+    return container;
+}
+
 export function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
