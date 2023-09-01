@@ -1,15 +1,29 @@
 // import type { Properties as CSSProperties } from "csstype"
 
 
+
+function copyOn(obj: any, objToCopy: any) {
+    for (const key in objToCopy) {
+        let value = objToCopy[key];
+        if (typeof obj[key] === "object" && typeof value === "object") {
+            copyOn(obj[key], value);
+            continue;
+        }
+        obj[key] = value;
+    }
+}
+
+// window.sdf = {asd: {gfh: "lll"}, add: "2"};
+// window.asdg = copyOn(sdf, {asd: {gf: "brr"}})
+
+
+
 export function mkHTML<T extends keyof HTMLElementTagNameMap>(
     tag: T,
     properties?: Partial<HTMLElementTagNameMap[T]>
 ): HTMLElementTagNameMap[T] {
     const elm = document.createElement(tag);
-    if (properties) for (const i in properties) {
-        // @ts-ignore 
-        elm[i as any] = properties[i];
-    }
+    if (properties) copyOn(elm, properties);
     return elm;
 }
 
@@ -18,9 +32,9 @@ export function addTextBeforeElement(text: string, element: Node) {
     // const textElement = mkHTML("span", {
     //     textContent: text
     // });
-    
+
     container.append(text, element);
-    
+
     return container;
 }
 

@@ -6,30 +6,38 @@ class ArtInfoElement {
     element = mkHTML("div", {
         className: "art-info-element"
     });
-    name = mkHTML("span");
-    categories = mkHTML("span");
-    description = mkHTML("p");
+    name: HTMLSpanElement
+    categories: HTMLSpanElement;
+    description: HTMLParagraphElement;
     
-    position = new Position();
+    position: Position;
 
     constructor(
         public artInfo: ArtInfoInterface
     ) {
         // name
         const header = mkHTML("header");
-        this.name.textContent = artInfo.name;
-        this.name.dataset.tooltip = artInfo.id;
+        this.name = mkHTML("span", {
+            textContent:  artInfo.name,
+            dataset: {
+                tooltip: artInfo.id
+            }
+        });
 
-        this.categories.textContent = artInfo.categories.join(", ");
+        this.categories = mkHTML("span", {
+            textContent: artInfo.categories.join(", ")
+        });
+
         header.append(this.name, this.categories);
         
         // description
-        this.description.textContent = artInfo.description;
+        this.description = mkHTML("p", {
+            textContent: artInfo.description
+        });
+
 
         // position
-        this.position.x = artInfo.x;
-        this.position.y = artInfo.y;
-
+        this.position = new Position(artInfo.x, artInfo.y);
 
         // adding all elements
         this.element.append(header, this.description, this.position.element);
