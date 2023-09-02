@@ -1,5 +1,5 @@
-# Art2See (Art To See)
-Work in progress OWOP addon to make
+# Art2See (Art To See) Archived
+
 # Contributions
 are welcome. To make it easier for you to change stuff read [how to install local scripts](https://violentmonkey.github.io/posts/how-to-edit-scripts-with-your-favorite-editor/#install-a-local-script)\
 Open http://localhost:8080/Art2See.user.js \
